@@ -3,12 +3,10 @@
 # sudo yum -y install rpmdevtools && rpmdev-setuptree
 # wget https://raw.github.com/nmilford/rpm-erlang/master/erlang.spec -O ~/rpmbuild/SPECS/erlang.spec
 # wget http://www.erlang.org/download/otp_src_R16B03.tar.gz -O ~/rpmbuild/SOURCES/otp_src_R16B03.tar.gz
-# wget http://www.erlang.org/download/otp_doc_html_R16B03.tar.gz -O ~/rpmbuild/SOURCES/otp_doc_html_R16B03.tar.gz 
-# wget http://www.erlang.org/download/otp_doc_man_R16B03.tar.gz -O ~/rpmbuild/SOURCES/otp_doc_man_R16B03.tar.gz
 # rpmbuild -bb ~/rpmbuild/SPECS/erlang.spec
 
-%global erl_ver R16B
-%global erl_rel 03
+%global erl_ver R13B
+%global erl_rel 04
 %global erl_dest /usr/
 
 Name:     erlang
@@ -19,8 +17,6 @@ Group:    Development/Languages
 License:  ERPL
 URL:      http://www.erlang.org
 Source0:  http://www.erlang.org/download/otp_src_%{erl_ver}%{erl_rel}.tar.gz
-Source1:  http://www.erlang.org/download/otp_doc_html_%{erl_ver}%{erl_rel}.tar.gz
-Source2:  http://www.erlang.org/download/otp_doc_man_%{erl_ver}%{erl_rel}.tar.gz
 BuildRequires:  ncurses-devel
 BuildRequires:  openssl-devel
 BuildRequires:  zlib-devel
@@ -100,8 +96,8 @@ Deal with it.
 %setup -q -n otp_src_%{erl_ver}%{erl_rel}
 
 # Fix RPATH issue... too lazy to maintain a patch... if stuff breaks, look here.
-sed -i -e 's|SSL_DED_LD_RUNTIME_LIBRARY_PATH = @SSL_DED_LD_RUNTIME_LIBRARY_PATH@|SSL_DED_LD_RUNTIME_LIBRARY_PATH =|' %_builddir/otp_src_%{erl_ver}%{erl_rel}/lib/crypto/c_src/Makefile.in
-sed -i -e 's|$(SO_LD) $(SO_LDFLAGS) -L$(SO_SSL_LIBDIR) -Wl,-R$(SO_SSL_LIBDIR) |$(SO_LD) $(SO_LDFLAGS) -L$(SO_SSL_LIBDIR) |' %_builddir/otp_src_%{erl_ver}%{erl_rel}/lib/crypto/priv/Makefile
+#sed -i -e 's|SSL_DED_LD_RUNTIME_LIBRARY_PATH = @SSL_DED_LD_RUNTIME_LIBRARY_PATH@|SSL_DED_LD_RUNTIME_LIBRARY_PATH =|' %_builddir/otp_src_%{erl_ver}%{erl_rel}/lib/crypto/c_src/Makefile.in
+#sed -i -e 's|$(SO_LD) $(SO_LDFLAGS) -L$(SO_SSL_LIBDIR) -Wl,-R$(SO_SSL_LIBDIR) |$(SO_LD) $(SO_LDFLAGS) -L$(SO_SSL_LIBDIR) |' %_builddir/otp_src_%{erl_ver}%{erl_rel}/lib/crypto/priv/Makefile
 
 %build
 # CentOS 6.5 disables EC GF2m curves.
@@ -114,10 +110,6 @@ make %{?_smp_mflags}
 %install
 make DESTDIR=%{buildroot} install
 
-# Drop docs
-tar -xf %_sourcedir/otp_doc_man_%{erl_ver}%{erl_rel}.tar.gz -C %{buildroot}/%{erl_dest}/%{_lib}/erlang/
-tar -xf %_sourcedir/otp_doc_html_%{erl_ver}%{erl_rel}.tar.gz -C %{buildroot}/%{erl_dest}/%{_lib}/erlang/
-
 %clean
 rm -rf %{buildroot}
 
@@ -127,6 +119,8 @@ rm -rf %{buildroot}
 %{erl_dest}/%{_lib}/erlang/*
 
 %changelog
+* Wed Dec  3 2014 Uvarov Michael <uvarov.michael@erlang-solutions.com>
+- Back to R13B04
 * Wed Dec 25 2013 Nathan Milford <nathan@milford.io>
 - Bumped to version R16B03.
 - Added workaround for EC GF2m curves missing in CentOS 6.5 OpenSSL.
