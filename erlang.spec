@@ -1,9 +1,10 @@
 # To Build:
 #
 # sudo yum -y install rpmdevtools && rpmdev-setuptree
-# wget https://raw.github.com/nmilford/rpm-erlang/master/erlang.spec -O ~/rpmbuild/SPECS/erlang.spec
-# wget http://www.erlang.org/download/otp_src_R16B03.tar.gz -O ~/rpmbuild/SOURCES/otp_src_R16B03.tar.gz
-# rpmbuild -bb ~/rpmbuild/SPECS/erlang.spec
+# mkdir -p ~/rpmbuild/SOURCES/ ~/rpmbuild/SPECS/
+# wget https://raw.github.com/arcusfelis/rpm-erlang/master/erlang.spec -O ~/rpmbuild/SPECS/erlang.spec
+# wget http://www.erlang.org/download/otp_src_R13B04.tar.gz -O ~/rpmbuild/SOURCES/otp_src_R13B04.tar.gz
+# rpmbuild  --define "_topdir $HOME/rpmbuild"  --define "_rpmdir $HOME" -bb ~/rpmbuild/SPECS/erlang.spec 
 
 %global erl_ver R13B
 %global erl_rel 04
@@ -20,7 +21,6 @@ Source0:  http://www.erlang.org/download/otp_src_%{erl_ver}%{erl_rel}.tar.gz
 BuildRequires:  ncurses-devel
 BuildRequires:  openssl-devel
 BuildRequires:  zlib-devel
-BuildRequires:  flex
 BuildRequires:  m4
 BuildRoot:      %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 Obsoletes:      esl-erlang
@@ -103,7 +103,7 @@ Deal with it.
 # CentOS 6.5 disables EC GF2m curves.
 FLAGS="$RPM_OPT_FLAGS -fno-strict-aliasing -DOPENSSL_NO_EC=1"
 
-%configure --enable-shared-zlib --prefix=%{erl_dest} 
+%configure --enable-shared-zlib --without-javac --disable-megaco-flex-scanner-lineno --disable-megaco-reentrant-flex-scanner --prefix=%{erl_dest} 
 
 make %{?_smp_mflags}
 
