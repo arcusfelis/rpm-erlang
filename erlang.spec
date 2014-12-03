@@ -103,7 +103,7 @@ Deal with it.
 # CentOS 6.5 disables EC GF2m curves.
 FLAGS="$RPM_OPT_FLAGS -fno-strict-aliasing -DOPENSSL_NO_EC=1"
 
-%configure --enable-shared-zlib --without-javac --disable-megaco-flex-scanner-lineno --disable-megaco-reentrant-flex-scanner  --disable-hipe --prefix=%{erl_dest} 
+%configure --enable-shared-zlib --without-javac --disable-megaco-flex-scanner-lineno --disable-megaco-reentrant-flex-scanner  --disable-hipe --enable-dynamic-ssl-lib --prefix=%{erl_dest} 
 
 make %{?_smp_mflags}
 
