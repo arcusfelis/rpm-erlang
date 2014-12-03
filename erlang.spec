@@ -1,7 +1,7 @@
 # To Build:
 #
 # sudo yum -y install rpmdevtools && rpmdev-setuptree
-# mkdir -p ~/rpmbuild/SOURCES/ ~/rpmbuild/SPECS/
+# mkdir -p ~/rpmbuild/SOURCES/ ~/rpmbuild/SPECS/ ~/rpmbuild/BUILD
 # wget https://raw.github.com/arcusfelis/rpm-erlang/master/erlang.spec -O ~/rpmbuild/SPECS/erlang.spec
 # wget http://www.erlang.org/download/otp_src_R13B04.tar.gz -O ~/rpmbuild/SOURCES/otp_src_R13B04.tar.gz
 # rpmbuild  --define "_topdir $HOME/rpmbuild"  --define "_rpmdir $HOME" -bb ~/rpmbuild/SPECS/erlang.spec 
@@ -103,7 +103,7 @@ Deal with it.
 # CentOS 6.5 disables EC GF2m curves.
 FLAGS="$RPM_OPT_FLAGS -fno-strict-aliasing -DOPENSSL_NO_EC=1"
 
-%configure --enable-shared-zlib --without-javac --disable-megaco-flex-scanner-lineno --disable-megaco-reentrant-flex-scanner --prefix=%{erl_dest} 
+%configure --enable-shared-zlib --without-javac --disable-megaco-flex-scanner-lineno --disable-megaco-reentrant-flex-scanner  --disable-hipe --prefix=%{erl_dest} 
 
 make %{?_smp_mflags}
 
