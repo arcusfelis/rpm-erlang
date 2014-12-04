@@ -96,9 +96,11 @@ Deal with it.
 %setup -q -n otp_src_%{erl_ver}%{erl_rel}
 
 # Fix RPATH issue... too lazy to maintain a patch... if stuff breaks, look here.
-# http://erlang.org/pipermail/erlang-questions/2008-August/037237.html
 sed -i -e 's|SSL_DED_LD_RUNTIME_LIBRARY_PATH = @SSL_DED_LD_RUNTIME_LIBRARY_PATH@|SSL_DED_LD_RUNTIME_LIBRARY_PATH =|' %_builddir/otp_src_%{erl_ver}%{erl_rel}/lib/crypto/c_src/Makefile.in
 sed -i -e 's|$(SO_LD) $(SO_LDFLAGS) -L$(SO_SSL_LIBDIR) -Wl,-R$(SO_SSL_LIBDIR) |$(SO_LD) $(SO_LDFLAGS) -L$(SO_SSL_LIBDIR) |' %_builddir/otp_src_%{erl_ver}%{erl_rel}/lib/crypto/priv/Makefile
+# http://erlang.org/pipermail/erlang-questions/2008-August/037237.html
+# http://www.redhat.com/archives/fedora-extras-commits/2008-March/msg06745.html
+sed -i -e 's|LIBS = @LIBS@|LIBS = @LIBS@ -lkeyutils -lselinux|' %_builddir/otp_src_%{erl_ver}%{erl_rel}/lib/ssl/c_src/Makefile.in
 
 %build
 # CentOS 6.5 disables EC GF2m curves.
